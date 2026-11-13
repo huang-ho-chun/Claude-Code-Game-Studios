@@ -1,7 +1,7 @@
 <p align="center">
-  <h1 align="center">Claude Code Game Studios</h1>
+  <h1 align="center">Codex Game Studios</h1>
   <p align="center">
-    Describe a game. Claude Code asks a few questions, writes a one-page brief,
+    Describe a game. Codex asks a few questions, writes a one-page brief,
     and builds a playable browser game from it.
     <br />
     Then you change it, grow it and finish it, one step at a time.
@@ -10,7 +10,8 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href="https://code.claude.com/docs"><img src="https://img.shields.io/badge/built%20for-Claude%20Code-f5f5f5?logo=anthropic" alt="Built for Claude Code"></a>
+  <a href="https://developers.openai.com/codex/"><img src="https://img.shields.io/badge/compatible%20with-Codex-000000?logo=openai" alt="Compatible with Codex"></a>
+  <a href="https://code.claude.com/docs"><img src="https://img.shields.io/badge/also%20supports-Claude%20Code-f5f5f5?logo=anthropic" alt="Also supports Claude Code"></a>
   <a href="https://www.buymeacoffee.com/donchitos3"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20this%20project-FFDD00?logo=buymeacoffee&logoColor=black" alt="Buy Me a Coffee"></a>
   <a href="https://github.com/sponsors/Donchitos"><img src="https://img.shields.io/badge/GitHub%20Sponsors-Support%20this%20project-ea4aaa?logo=githubsponsors&logoColor=white" alt="GitHub Sponsors"></a>
 </p>
@@ -19,10 +20,10 @@
 
 ## Make me a game
 
-Open Claude Code in a copy of this repository and say what you want:
+Open Codex in a copy of this repository and say what you want:
 
 ```
-/prototype a fishing game where the rare fish only bite at dusk
+$prototype a fishing game where the rare fish only bite at dusk
 ```
 
 1. **A few questions.** One round, picked from the genre: the choices that
@@ -106,7 +107,8 @@ clutter, not evidence.
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Claude Code](https://code.claude.com/docs/en/setup) — the native installer is recommended (`npm install -g @anthropic-ai/claude-code` also works, on Node.js 22+)
+- [Codex](https://developers.openai.com/codex/) — desktop app or CLI
+- Optional: [Claude Code](https://code.claude.com/docs/en/setup) for the original runtime
 - [Python 3](https://www.python.org/) — reads `project.yaml` for every skill and hook; without it every setting silently falls back to its default
 - Bash — runs every hook; built into macOS and Linux, and on Windows it comes with [Git for Windows](https://git-scm.com/downloads/win). Without it on Windows the hooks skip themselves, and session start says their checks are off
 - **Chrome, Edge or Chromium** — `/prototype` plays and screenshots each game in it; without one, those checks say they were not assessed
@@ -122,23 +124,28 @@ Hooks fail gracefully if optional tools are missing — you just lose validation
    cd my-game
    ```
 
-2. **Open Claude Code in the project's root folder** (the one holding
-   `CLAUDE.md` and `project.yaml`) and start a session:
-   ```bash
-   claude
-   ```
-   Starting it in a subfolder such as `src/` skips the project's hooks, deny
-   rules and ask-first permission mode.
+2. **Open Codex in the project's root folder** (the one holding `AGENTS.md`
+   and `project.yaml`). Codex automatically loads the repository policy and
+   discovers the wrappers under `.agents/skills/`.
 
-3. **Type `/prototype` and your idea**, or **run `/start`**, which asks where
+   With the Codex CLI, start a session from that directory:
+   ```bash
+   codex
+   ```
+
+3. **Invoke `$prototype` with your idea**, or **run `$start`**, which asks where
    you are (make me a game, an idea or none yet, clear design, existing work)
    and guides you to the right workflow. No assumptions.
 
    Other ways in:
-   - `/next-step` — names the one next step wherever you are
-   - `/brainstorm` — explore game ideas from scratch
-   - `/setup-engine godot 4.7` — configure an engine if you already know you want one
-   - `/project-stage-detect` — analyze an existing project
+   - `$next-step` — names the one next step wherever you are
+   - `$brainstorm` — explore game ideas from scratch
+   - `$setup-engine godot 4.7` — configure an engine if you already know you want one
+   - `$project-stage-detect` — analyze an existing project
+
+The original slash-command spelling remains in canonical workflow documents.
+`AGENTS.md` defines how Codex translates that vocabulary. See
+[the migration note](docs/CODEX-MIGRATION.md) for the compatibility boundary.
 
 ## Engines
 
@@ -214,8 +221,12 @@ versions, and which files are safe to overwrite vs. which need a manual merge.
 ## Project Structure
 
 ```
-CLAUDE.md                           # Master configuration
+AGENTS.md                           # Codex repository policy and compatibility map
+CLAUDE.md                           # Original Claude Code policy
 project.yaml                        # Project settings: engine, modes, goal
+.agents/
+  skills/                           # 78 Codex discovery wrappers
+  scripts/                          # Wrapper synchronization/check tool
 .claude/
   settings.json                     # Hooks, permissions, safety rules
   agents/                           # 49 agent definitions (markdown + YAML frontmatter)
@@ -265,7 +276,12 @@ It tests the *framework*, never your game — game tests live in `tests/`.
 
 ## Hooks, Permissions and Rules
 
-**Hooks** run automatically on every session:
+**Claude Code hooks** run automatically in Claude Code sessions:
+
+> Codex does not activate these files merely because they exist. Codex uses its
+> own approval policy plus `AGENTS.md`, invoked skills, and explicit verification.
+> A future hook port must be packaged and trusted separately; see
+> [the migration note](docs/CODEX-MIGRATION.md).
 
 | Hook | Trigger | What It Does |
 |------|---------|--------------|
@@ -373,9 +389,10 @@ matches your project (a web project uses the general programmers):
 | **Unity** | `unity-specialist` | DOTS/ECS, Shaders/VFX, Addressables, UI Toolkit |
 | **Unreal Engine 5** | `unreal-specialist` | GAS, Blueprints, Replication, UMG/CommonUI |
 
-### Slash Commands
+### Skills
 
-Type `/` in Claude Code to access all 75 skills (plus three old names that point to their new ones):
+In Codex, invoke skills with `$name`; canonical Claude Code docs use `/name`.
+All 75 workflows and three compatibility aliases are discoverable in both forms.
 
 **Make a Game**
 `/prototype` `/cut`

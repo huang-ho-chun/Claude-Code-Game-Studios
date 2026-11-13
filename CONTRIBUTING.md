@@ -1,6 +1,7 @@
-# Contributing to Claude Code Game Studios
+# Contributing to Codex Game Studios
 
-CCGS is a coordination framework for indie game development using Claude Code.
+CCGS is a coordination framework for indie game development using Codex while
+retaining compatibility with its original Claude Code runtime.
 Contributions are welcome — bug fixes, new skills that fill a real gap, agent
 improvements, and hook fixes. PRs that don't fit the framework's direction will
 be closed without lengthy explanation.
@@ -26,7 +27,10 @@ These are the things that will get your PR rejected if you miss them.
 
 **Skill files**
 - Skills live in `.claude/skills/<name>/SKILL.md` — the subdirectory format is
-  required. Flat `.md` files are silently ignored by Claude Code.
+  canonical. Flat `.md` files are ignored by Claude Code.
+- Codex discovers generated wrappers under `.agents/skills/`. After changing
+  canonical skill metadata, run
+  `.agents/scripts/sync-skill-wrappers.ps1 -Check`; regenerate without `-Check`.
 - SKILL.md must include YAML frontmatter: `name`, `description`,
   `argument-hint`, `allowed-tools`, and `model`
 - Model tier: `haiku` for read-only status checks, `opus` for multi-document
@@ -61,8 +65,10 @@ or writing files unilaterally, it won't be merged.
 
 ## Testing Your Changes
 
-Run it in a Claude Code session and confirm it works end-to-end. For skills,
-invoke the skill and verify the output matches what the skill claims to do.
+Run it in a Codex session and confirm it works end-to-end. Changes to
+runtime-specific Claude Code hooks must also be tested in Claude Code. For
+skills, invoke the skill and verify the output matches what the skill claims
+to do.
 For hooks, trigger the relevant event and confirm the hook fires correctly
 and exits cleanly.
 
